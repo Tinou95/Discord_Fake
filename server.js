@@ -2,6 +2,7 @@ console.log("charged");
 let app = require('express')();
 let http = require('http').Server(app);
 let io = require('socket.io')(http);
+const anonyme = ["pomme", "banane", "orange", "kiwi", "ananas","carotte", "pomme de terre", "tomate", "poivron", "courgette"];
 let user = 0;
 app.get("/", function (req, res) {
 	res.sendFile(__dirname + '/index.html')
@@ -18,18 +19,30 @@ app.get("/css/style.css", function (req, res) {
 });
 
 io.on('connection', function(socket){
-	user += 1;
+	user++;
+	let username = anonyme[Math.floor(Math.random() * anonyme.length)] + "#" + user;
+	let now = new Date(); 
+	let hours = now.getHours();
+	let minutes = now.getMinutes(); 
+	time = + hours + ":" + minutes;
+	socket.emit('username', username);
+	socket.emit('time', time);
 	console.log("le nombre d'utilisateur est de :" + user)
 	console.log("a user is connected"),
 	socket.on('disconnect', function(){
 		console.log("a user is disconnected")
-		user -= 1;
+		user--;
 		console.log("le nombre d'utilisateur est de :" + user)
 	}),
 	socket.on('chat message', function(msg){
-		console.log("message reçu : " + msg)
-		io.emit('chat message', msg)
-	})
+		let now = new Date(); 
+		let hours = now.getHours();
+		let minutes = now.getMinutes(); 
+		time = + hours + ":" + minutes;
+        console.log("message reçu : " + msg)
+        io.emit('chat message', { username: username, message: msg, time : time });
+    })
+	
 })
 const port = process.env.PORT || 3000
 http.listen(port, function () {

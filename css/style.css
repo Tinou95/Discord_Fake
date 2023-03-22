@@ -121,9 +121,18 @@ main .envoie{
 	padding: 1rem;
 	margin: 1rem;
 	border-radius: .75rem;
-	border:none;
+	border: none;
 	background-color: var(--color-4);
-	width: 90%;
+	width: 85%;
+}
+main .envoie button{
+	padding: 1rem 2rem;
+	cursor: pointer;
+	border-radius: .75rem;
+	border:solid .1rem #fff;
+}
+main .envoie button:hover{
+	background-color: #202225;
 }
 main .user{
 	border-left: solid .1rem #000;
